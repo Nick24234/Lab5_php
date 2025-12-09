@@ -1,0 +1,66 @@
+<%= form_with(model: user, local: true) do |form| %>
+  <% if user.errors.any? %>
+    <div class="alert">
+      <h3>Виявлено <%= pluralize(user.errors.count, "помилку") %>:</h3>
+      <ul style="margin-top: 10px; padding-left: 20px;">
+        <% user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :nickname, "Нікнейм" %>
+    <%= form.text_field :nickname, placeholder: "Введіть унікальний нікнейм (3-20 символів)", required: true %>
+    <% if user.errors[:nickname].any? %>
+      <div class="error-message"><%= user.errors[:nickname].first %></div>
+    <% end %>
+    <small style="color: #6c757d; display: block; margin-top: 5px;">
+      Нікнейм має бути унікальним та містити від 3 до 20 символів
+    </small>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :email, "Email" %>
+    <%= form.email_field :email, placeholder: "Введіть email адресу", required: true %>
+    <% if user.errors[:email].any? %>
+      <div class="error-message"><%= user.errors[:email].first %></div>
+    <% end %>
+    <small style="color: #6c757d; display: block; margin-top: 5px;">
+      Використовується для зв'язку та відновлення доступу
+    </small>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :full_name, "Повне ім'я" %>
+    <%= form.text_field :full_name, placeholder: "Введіть ваше повне ім'я (2-50 символів)", required: true %>
+    <% if user.errors[:full_name].any? %>
+      <div class="error-message"><%= user.errors[:full_name].first %></div>
+    <% end %>
+    <small style="color: #6c757d; display: block; margin-top: 5px;">
+      Ваше повне ім'я для ідентифікації в системі
+    </small>
+  </div>
+
+  <% unless user.new_record? %>
+    <div class="form-group">
+      <%= form.label :balance, "Баланс" %>
+      <%= form.number_field :balance, step: 0.01, placeholder: "Введіть баланс" %>
+      <% if user.errors[:balance].any? %>
+        <div class="error-message"><%= user.errors[:balance].first %></div>
+      <% end %>
+    </div>
+  <% else %>
+    <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196F3;">
+      <strong>💰 Початковий баланс:</strong> 1000₴
+      <br>
+      <small>Кожен новий користувач автоматично отримує 1000₴ на баланс</small>
+    </div>
+  <% end %>
+
+  <div class="form-actions">
+    <%= form.submit user.new_record? ? 'Створити акаунт' : 'Оновити профіль', class: 'btn btn-primary' %>
+    <%= link_to 'Скасувати', user.new_record? ? root_path : user_path(user), class: 'btn btn-secondary' %>
+  </div>
+<% end %>

@@ -1,0 +1,12 @@
+<h2>Створити новий переказ</h2>
+
+<% unless logged_in? %>
+  <div class="alert">
+    Будь ласка, <strong><%= link_to 'увійдіть в систему', login_path %></strong> або 
+    <strong><%= link_to 'створіть акаунт', new_user_path %></strong> для створення переказів.
+  </div>
+<% else %>
+  <%= render 'form', transfer: @transfer %>
+<% end %>
+
+<%= link_to 'Назад до списку', transfers_path, class: 'back-link' %>

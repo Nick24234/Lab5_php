@@ -1,0 +1,76 @@
+<div class="params-demo-section">
+  <h1 style="font-size: 2.5em; color: #667eea; margin-bottom: 30px; text-align: center;">
+    Демонстрація роботи з параметрами форми
+  </h1>
+
+  <div style="background: #d4edda; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 2px solid #c3e6cb; max-width: 900px; margin-left: auto; margin-right: auto;">
+    <p style="font-size: 1.2em; color: #155724; text-align: center; margin-bottom: 20px;">
+      ✅ Реєстрація успішна! Нижче показано, як дані з форми передаються через хеш params.
+    </p>
+  </div>
+
+  <div style="background: #f8f9fa; padding: 30px; border-radius: 15px; max-width: 900px; margin-left: auto; margin-right: auto; border-left: 5px solid #667eea; margin-bottom: 30px;">
+    <h2 style="color: #667eea; margin-bottom: 25px; font-size: 1.8em; text-align: center;">
+      Дані, отримані з форми через params[:user]:
+    </h2>
+
+    <% if @params_data.present? %>
+      <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <p style="margin-bottom: 15px; font-size: 1.1em;">
+          <strong style="color: #667eea;">1. Нікнейм (params[:user][:nickname]):</strong>
+          <span style="color: #333; margin-left: 10px; font-weight: 600;"><%= @params_data[:nickname] %></span>
+        </p>
+      </div>
+
+      <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <p style="margin-bottom: 15px; font-size: 1.1em;">
+          <strong style="color: #667eea;">2. Email (params[:user][:email]):</strong>
+          <span style="color: #333; margin-left: 10px; font-weight: 600;"><%= @params_data[:email] %></span>
+        </p>
+      </div>
+
+      <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <p style="margin-bottom: 15px; font-size: 1.1em;">
+          <strong style="color: #667eea;">3. Повне ім'я (params[:user][:full_name]):</strong>
+          <span style="color: #333; margin-left: 10px; font-weight: 600;"><%= @params_data[:full_name] %></span>
+        </p>
+      </div>
+    <% else %>
+      <p style="color: #6c757d; text-align: center; padding: 20px;">
+        Параметри не знайдено. Спробуйте зареєструватися знову.
+      </p>
+    <% end %>
+  </div>
+
+  <div style="background: #fff3cd; padding: 20px; border-radius: 15px; margin-top: 30px; max-width: 900px; margin-left: auto; margin-right: auto; border-left: 5px solid #ffc107;">
+    <h3 style="color: #856404; margin-bottom: 15px; font-size: 1.3em;">
+      📋 Технічна інформація: Повний хеш params[:user]
+    </h3>
+    <pre style="background: white; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 14px; color: #333; border: 1px solid #ddd; max-height: 300px; overflow-y: auto;"><%= @params_data.inspect %></pre>
+    <p style="color: #856404; margin-top: 15px; font-size: 0.9em;">
+      <strong>Пояснення:</strong> У контролері дані з форми доступні через хеш <code>params</code>. 
+      Для форми реєстрації всі поля знаходяться в <code>params[:user]</code>, оскільки форма використовує 
+      <code>form_with(model: user)</code>, що автоматично групує поля в хеш <code>user</code>.
+    </p>
+  </div>
+
+  <div style="background: #e7f3ff; padding: 20px; border-radius: 15px; margin-top: 30px; max-width: 900px; margin-left: auto; margin-right: auto; border-left: 5px solid #2196F3;">
+    <h3 style="color: #0d47a1; margin-bottom: 15px; font-size: 1.3em;">
+      💡 Як це працює:
+    </h3>
+    <ul style="color: #0d47a1; line-height: 1.8; padding-left: 25px;">
+      <li>Форма відправляє дані методом POST на <code>/users</code></li>
+      <li>У контролері <code>UsersController#create</code> дані доступні через <code>params[:user]</code></li>
+      <li>Метод <code>user_params</code> використовує <code>params.require(:user).permit(:nickname, :email, :full_name)</code></li>
+      <li>Це дозволяє безпечно отримати тільки дозволені параметри з форми</li>
+    </ul>
+  </div>
+
+  <div style="text-align: center; margin-top: 40px;">
+    <% if @user %>
+      <%= link_to 'Перейти до профілю', user_path(@user), class: 'btn btn-primary', style: 'margin-right: 15px;' %>
+    <% end %>
+    <%= link_to 'Повернутися на головну', root_path, class: 'btn btn-secondary' %>
+  </div>
+</div>
+

@@ -1,0 +1,42 @@
+<%= form_with(model: post, local: true) do |form| %>
+  <% if post.errors.any? %>
+    <div class="alert">
+      <h3>Виявлено <%= pluralize(post.errors.count, "помилку") %>:</h3>
+      <ul style="margin-top: 10px; padding-left: 20px;">
+        <% post.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :title, "Заголовок" %>
+    <%= form.text_field :title, placeholder: "Введіть заголовок статті" %>
+    <% if post.errors[:title].any? %>
+      <div class="error-message"><%= post.errors[:title].first %></div>
+    <% end %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :author, "Автор" %>
+    <%= form.text_field :author, placeholder: "Введіть ім'я автора" %>
+    <% if post.errors[:author].any? %>
+      <div class="error-message"><%= post.errors[:author].first %></div>
+    <% end %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :content, "Вміст статті" %>
+    <%= form.text_area :content, placeholder: "Введіть текст статті" %>
+    <% if post.errors[:content].any? %>
+      <div class="error-message"><%= post.errors[:content].first %></div>
+    <% end %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit post.new_record? ? 'Створити статтю' : 'Оновити статтю', class: 'btn btn-primary' %>
+    <%= link_to 'Скасувати', posts_path, class: 'btn btn-secondary' %>
+  </div>
+<% end %>
+

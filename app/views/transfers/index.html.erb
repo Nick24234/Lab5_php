@@ -1,0 +1,62 @@
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+  <h2>Всі перекази</h2>
+  <% if logged_in? %>
+    <%= link_to 'Створити новий переказ', new_transfer_path, class: 'btn btn-primary' %>
+  <% else %>
+    <%= link_to 'Увійти для створення переказу', login_path, class: 'btn btn-primary' %>
+  <% end %>
+</div>
+
+<% if @transfers.any? %>
+  <div class="posts-list">
+    <% @transfers.each do |transfer| %>
+      <div class="post-card">
+        <h3>Переказ #<%= transfer.id %></h3>
+        <div class="post-meta">
+          <strong>Відправник:</strong> <%= transfer.sender.nickname %> | 
+          <strong>Отримувач:</strong> <%= transfer.receiver.nickname %> | 
+          <strong>Сума:</strong> <%= number_to_currency(transfer.amount, unit: "₴", separator: ",", delimiter: " ") %>
+        </div>
+        <div class="post-meta" style="margin-top: 10px;">
+          <strong>Статус:</strong> 
+          <span style="padding: 4px 12px; border-radius: 4px; font-weight: bold; 
+            <% if transfer.completed? %>
+              background: #d4edda; color: #155724;
+            <% elsif transfer.cancelled? %>
+              background: #f8d7da; color: #721c24;
+            <% else %>
+              background: #fff3cd; color: #856404;
+            <% end %>">
+            <% if transfer.completed? %>
+              ✅ Завершено
+            <% elsif transfer.cancelled? %>
+              ❌ Скасовано
+            <% else %>
+              ⏳ Очікує підтвердження
+            <% end %>
+          </span>
+          | <strong>Створено:</strong> <%= transfer.created_at.strftime("%d.%m.%Y о %H:%M") %>
+        </div>
+        <div class="post-actions">
+          <%= link_to 'Переглянути', transfer, class: 'btn btn-primary' %>
+          <%= link_to 'Редагувати', edit_transfer_path(transfer), class: 'btn btn-secondary' %>
+          <%= button_to 'Видалити', transfer, method: :delete, 
+              data: { confirm: 'Ви впевнені?' }, 
+              class: 'btn btn-danger', form: { style: 'display: inline;' } %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <h2>Поки що немає переказів</h2>
+    <% if logged_in? %>
+      <p>Створіть перший переказ, щоб почати роботу з системою!</p>
+      <%= link_to 'Створити переказ', new_transfer_path, class: 'btn btn-primary', style: 'margin-top: 20px;' %>
+    <% else %>
+      <p>Будь ласка, увійдіть в систему для перегляду та створення переказів.</p>
+      <%= link_to 'Увійти', login_path, class: 'btn btn-primary', style: 'margin-top: 20px;' %>
+      <%= link_to 'Створити акаунт', new_user_path, class: 'btn btn-secondary', style: 'margin-top: 20px;' %>
+    <% end %>
+  </div>
+<% end %>

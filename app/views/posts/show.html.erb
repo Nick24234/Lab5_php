@@ -1,0 +1,24 @@
+<div class="post-card" style="border-left: none;">
+  <h2 style="color: #667eea; margin-bottom: 15px;"><%= @post.title %></h2>
+  
+  <div class="post-meta" style="margin-bottom: 25px;">
+    <strong>Автор:</strong> <%= @post.author %><br>
+    <strong>Створено:</strong> <%= @post.created_at.strftime("%d.%m.%Y о %H:%M") %><br>
+    <% if @post.updated_at != @post.created_at %>
+      <strong>Оновлено:</strong> <%= @post.updated_at.strftime("%d.%m.%Y о %H:%M") %>
+    <% end %>
+  </div>
+
+  <div class="post-content" style="font-size: 1.1em; line-height: 1.8; white-space: pre-wrap;">
+    <%= @post.content %>
+  </div>
+</div>
+
+<div class="form-actions">
+  <%= link_to 'Редагувати', edit_post_path(@post), class: 'btn btn-secondary' %>
+  <%= link_to 'Назад до списку', posts_path, class: 'btn btn-primary' %>
+  <%= button_to 'Видалити', @post, method: :delete, 
+      data: { confirm: 'Ви впевнені, що хочете видалити цю статтю?' }, 
+      class: 'btn btn-danger', form: { style: 'display: inline;' } %>
+</div>
+

@@ -1,0 +1,35 @@
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+  <h2>Всі статті</h2>
+  <%= link_to 'Створити нову статтю', new_post_path, class: 'btn btn-primary' %>
+</div>
+
+<% if @posts.any? %>
+  <div class="posts-list">
+    <% @posts.each do |post| %>
+      <div class="post-card">
+        <h3><%= post.title %></h3>
+        <div class="post-meta">
+          <strong>Автор:</strong> <%= post.author %> | 
+          <strong>Створено:</strong> <%= post.created_at.strftime("%d.%m.%Y о %H:%M") %>
+        </div>
+        <div class="post-content">
+          <%= truncate(post.content, length: 200) %>
+        </div>
+        <div class="post-actions">
+          <%= link_to 'Переглянути', post, class: 'btn btn-primary' %>
+          <%= link_to 'Редагувати', edit_post_path(post), class: 'btn btn-secondary' %>
+          <%= button_to 'Видалити', post, method: :delete, 
+              data: { confirm: 'Ви впевнені?' }, 
+              class: 'btn btn-danger', form: { style: 'display: inline;' } %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <h2>Поки що немає статей</h2>
+    <p>Створіть першу статтю, щоб почати вести блог!</p>
+    <%= link_to 'Створити статтю', new_post_path, class: 'btn btn-primary', style: 'margin-top: 20px;' %>
+  </div>
+<% end %>
+

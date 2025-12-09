@@ -1,0 +1,37 @@
+<div class="support-section">
+  <h1 style="font-size: 2.5em; color: #667eea; margin-bottom: 30px; text-align: center;">
+    Зв'яжіться з підтримкою
+  </h1>
+
+  <div style="background: #f8f9fa; padding: 30px; border-radius: 15px; margin-bottom: 30px; max-width: 800px; margin-left: auto; margin-right: auto;">
+    <p style="font-size: 1.1em; line-height: 1.8; color: #333; margin-bottom: 30px; text-align: center;">
+      Маєте питання або потребуєте допомоги? Заповніть форму нижче, і наша команда підтримки зв'яжеться з вами найближчим часом.
+    </p>
+
+    <%= form_with url: support_path, method: :post, local: true, style: "max-width: 600px; margin: 0 auto;" do |form| %>
+      <div class="form-group">
+        <%= form.label :name, "Ваше ім'я:", style: "display: block; margin-bottom: 8px; font-weight: 600; color: #555;" %>
+        <%= form.text_field :name, required: true, style: "width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; font-family: inherit;" %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :subject, "Тема звернення:", style: "display: block; margin-bottom: 8px; font-weight: 600; color: #555;" %>
+        <%= form.text_field :subject, required: true, style: "width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; font-family: inherit;" %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :message, "Текст повідомлення:", style: "display: block; margin-bottom: 8px; font-weight: 600; color: #555;" %>
+        <%= form.text_area :message, required: true, rows: 8, style: "width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; font-family: inherit; resize: vertical;" %>
+      </div>
+
+      <div style="text-align: center; margin-top: 30px;">
+        <%= form.submit "Відправити", class: "btn btn-primary", style: "padding: 12px 40px; font-size: 18px;" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div style="text-align: center; margin-top: 30px;">
+    <%= link_to 'Повернутися на головну', root_path, class: 'btn btn-secondary' %>
+  </div>
+</div>
+

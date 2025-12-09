@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Система переказів</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application" %>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
+
+      header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      nav {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        margin-top: 20px;
+      }
+
+      nav a {
+        color: white;
+        text-decoration: none;
+        margin: 0 15px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background 0.3s;
+        display: inline-block;
+      }
+
+      nav a:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .content {
+        padding: 40px;
+      }
+
+      .notice, .alert {
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        font-weight: 500;
+      }
+
+      .notice {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .alert {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-danger {
+        background: #dc3545;
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background: #c82333;
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background: #5a6268;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #555;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+        font-family: inherit;
+      }
+
+      input[type="text"]:focus,
+      input[type="email"]:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      textarea {
+        min-height: 200px;
+        resize: vertical;
+      }
+
+      .field_with_errors input,
+      .field_with_errors textarea {
+        border-color: #dc3545;
+      }
+
+      .error-message {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+      }
+
+      .post-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-left: 4px solid #667eea;
+      }
+
+      .post-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .post-card h3 {
+        color: #667eea;
+        margin-bottom: 10px;
+        font-size: 1.5em;
+      }
+
+      .post-meta {
+        color: #6c757d;
+        font-size: 14px;
+        margin-bottom: 15px;
+      }
+
+      .post-content {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+
+      .post-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .post-actions .btn {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+
+      .form-actions {
+        margin-top: 30px;
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      .back-link {
+        margin-top: 20px;
+        display: inline-block;
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+      }
+
+      .empty-state h2 {
+        margin-bottom: 15px;
+        color: #667eea;
+      }
+
+      @media (max-width: 768px) {
+        header h1 {
+          font-size: 1.8em;
+        }
+
+        nav a {
+          display: block;
+          margin: 5px 0;
+        }
+
+        .content {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <header>
+        <h1>Система переказів</h1>
+        <% if logged_in? %>
+          <div style="background: rgba(255, 255, 255, 0.2); padding: 10px 20px; border-radius: 8px; margin-bottom: 15px; text-align: center;">
+            <strong style="font-size: 1.2em;">👤 <%= current_user.nickname %></strong>
+            <span style="margin: 0 15px;">|</span>
+            <strong style="font-size: 1.2em;"> Баланс: <%= number_to_currency(current_user.balance, unit: "₴", separator: ",", delimiter: " ") %></strong>
+          </div>
+        <% end %>
+        <nav>
+          <%= link_to 'Головна', root_path %>
+          <%= link_to 'Про додаток', about_path %>
+          <%= link_to 'Підтримка', support_path %>
+          <% if logged_in? %>
+            <%= link_to 'Всі перекази', transfers_path %>
+            <%= link_to 'Новий переказ', new_transfer_path %>
+            <%= link_to 'Всі користувачі', users_path %>
+            <%= link_to 'Вийти', logout_path, method: :get %>
+          <% else %>
+            <%= link_to 'Увійти', login_path %>
+            <%= link_to 'Створити акаунт', new_user_path %>
+          <% end %>
+        </nav>
+      </header>
+
+      <div class="content">
+        <% if notice %>
+          <div class="notice"><%= notice %></div>
+        <% end %>
+
+        <% if alert %>
+          <div class="alert"><%= alert %></div>
+        <% end %>
+
+        <%= yield %>
+      </div>
+    </div>
+  </body>
+</html>
+

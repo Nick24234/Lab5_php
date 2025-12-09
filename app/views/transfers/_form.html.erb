@@ -1,0 +1,87 @@
+<%= form_with(model: transfer, local: true) do |form| %>
+  <% if transfer.errors.any? %>
+    <div class="alert">
+      <h3>Виявлено <%= pluralize(transfer.errors.count, "помилку") %>:</h3>
+      <ul style="margin-top: 10px; padding-left: 20px;">
+        <% transfer.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if transfer.new_record? && logged_in? %>
+    <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196F3;">
+      <strong>👤 Відправник:</strong> <%= current_user.nickname %>
+      <br>
+      <strong>💰 Ваш баланс:</strong> <%= number_to_currency(current_user.balance, unit: "₴", separator: ",", delimiter: " ") %>
+    </div>
+  <% elsif !transfer.new_record? && transfer.sender && transfer.receiver %>
+    <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196F3;">
+      <strong>👤 Відправник:</strong> <%= transfer.sender.nickname %>
+      <br>
+      <strong>👤 Отримувач:</strong> <%= transfer.receiver.nickname %>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :receiver_id, "Отримувач" %>
+    <% if transfer.new_record? && logged_in? %>
+      <%= form.collection_select :receiver_id, 
+          User.where.not(id: current_user.id).order(:nickname), 
+          :id, 
+          lambda { |u| "#{u.nickname} (Баланс: #{number_to_currency(u.balance, unit: '₴', separator: ',', delimiter: ' ')})" },
+          { prompt: "Оберіть отримувача" },
+          { class: 'form-control', style: 'padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px;', required: true } %>
+    <% elsif !transfer.new_record? %>
+      <%= form.collection_select :receiver_id, 
+          User.all.order(:nickname), 
+          :id, 
+          lambda { |u| "#{u.nickname} (Баланс: #{number_to_currency(u.balance, unit: '₴', separator: ',', delimiter: ' ')})" },
+          {},
+          { class: 'form-control', style: 'padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px;', required: true } %>
+    <% end %>
+    <% if transfer.errors[:receiver_id].any? %>
+      <div class="error-message"><%= transfer.errors[:receiver_id].first %></div>
+    <% end %>
+    <small style="color: #6c757d; display: block; margin-top: 5px;">
+      Оберіть користувача, якому ви хочете переказати кошти
+    </small>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :amount, "Сума переказу" %>
+    <% if transfer.new_record? && logged_in? %>
+      <%= form.number_field :amount, step: 0.01, placeholder: "Введіть суму", min: 0.01, max: current_user.balance, required: true %>
+      <small style="color: #6c757d; display: block; margin-top: 5px;">
+        Максимальна сума: <%= number_to_currency(current_user.balance, unit: "₴", separator: ",", delimiter: " ") %>
+      </small>
+    <% else %>
+      <%= form.number_field :amount, step: 0.01, placeholder: "Введіть суму", min: 0.01, required: true %>
+    <% end %>
+    <% if transfer.errors[:amount].any? %>
+      <div class="error-message"><%= transfer.errors[:amount].first %></div>
+    <% end %>
+  </div>
+
+  <% unless transfer.new_record? %>
+    <div class="form-group">
+      <%= form.label :status, "Статус переказу" %>
+      <%= form.select :status, 
+          options_for_select([
+            ['⏳ Очікує підтвердження', 'pending'],
+            ['✅ Завершено', 'completed'],
+            ['❌ Скасовано', 'cancelled']
+          ], transfer.status),
+          {},
+          { class: 'form-control', style: 'padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px;' } %>
+    </div>
+  <% end %>
+
+  <div class="form-actions">
+    <% if logged_in? %>
+      <%= form.submit transfer.new_record? ? 'Створити переказ' : 'Оновити переказ', class: 'btn btn-primary' %>
+    <% end %>
+    <%= link_to 'Скасувати', transfers_path, class: 'btn btn-secondary' %>
+  </div>
+<% end %>

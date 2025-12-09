@@ -1,0 +1,68 @@
+<div class="post-card" style="border-left: none;">
+  <h2 style="color: #667eea; margin-bottom: 15px;">Переказ #<%= @transfer.id %></h2>
+  
+  <div class="post-meta" style="margin-bottom: 25px;">
+    <strong>Відправник:</strong> <%= @transfer.sender.nickname %> (Баланс: <%= number_to_currency(@transfer.sender.balance, unit: "₴", separator: ",", delimiter: " ") %>)<br>
+    <strong>Отримувач:</strong> <%= @transfer.receiver.nickname %> (Баланс: <%= number_to_currency(@transfer.receiver.balance, unit: "₴", separator: ",", delimiter: " ") %>)<br>
+    <strong>Сума:</strong> <%= number_to_currency(@transfer.amount, unit: "₴", separator: ",", delimiter: " ") %><br>
+    <strong>Статус:</strong> 
+    <span style="padding: 6px 16px; border-radius: 6px; font-weight: bold; font-size: 1.1em;
+      <% if @transfer.completed? %>
+        background: #d4edda; color: #155724;
+      <% elsif @transfer.cancelled? %>
+        background: #f8d7da; color: #721c24;
+      <% else %>
+        background: #fff3cd; color: #856404;
+      <% end %>">
+      <% if @transfer.completed? %>
+        ✅ Завершено - Кошти успішно переказано!
+      <% elsif @transfer.cancelled? %>
+        ❌ Скасовано
+      <% else %>
+        ⏳ Очікує підтвердження
+      <% end %>
+    </span><br>
+    <strong>Створено:</strong> <%= @transfer.created_at.strftime("%d.%m.%Y о %H:%M") %><br>
+    <% if @transfer.updated_at != @transfer.created_at %>
+      <strong>Оновлено:</strong> <%= @transfer.updated_at.strftime("%d.%m.%Y о %H:%M") %>
+    <% end %>
+  </div>
+  
+  <% if @transfer.pending? && logged_in? && current_user.id == @transfer.receiver_id %>
+    <div style="background: #e7f3ff; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196F3;">
+      <h3 style="margin-bottom: 15px; color: #1976D2;">Підтвердження переказу</h3>
+      <p style="margin-bottom: 15px;">Якщо кошти вже надійшли, натисніть кнопку "Підтвердити отримання" нижче.</p>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <%= button_to '✅ Підтвердити отримання', complete_transfer_path(@transfer), 
+            method: :patch, 
+            class: 'btn btn-primary',
+            form: { style: 'display: inline;' },
+            data: { confirm: 'Ви впевнені, що кошти вже отримано?' } %>
+      </div>
+    </div>
+  <% elsif @transfer.pending? && logged_in? && current_user.id == @transfer.sender_id %>
+    <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
+      <h3 style="margin-bottom: 15px; color: #856404;">Скасування переказу</h3>
+      <p style="margin-bottom: 15px;">Ви можете скасувати переказ, якщо він ще не підтверджено. Кошти повернуться на ваш баланс.</p>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <%= button_to '❌ Скасувати переказ', cancel_transfer_path(@transfer), 
+            method: :patch, 
+            class: 'btn btn-danger',
+            form: { style: 'display: inline;' },
+            data: { confirm: 'Ви впевнені, що хочете скасувати цей переказ? Кошти повернуться на ваш баланс.' } %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="form-actions">
+  <% if logged_in? && (current_user.id == @transfer.sender_id || current_user.id == @transfer.receiver_id) %>
+    <%= link_to 'Редагувати', edit_transfer_path(@transfer), class: 'btn btn-secondary' %>
+  <% end %>
+  <%= link_to 'Назад до списку', transfers_path, class: 'btn btn-primary' %>
+  <% if logged_in? && current_user.id == @transfer.sender_id %>
+    <%= button_to 'Видалити', @transfer, method: :delete, 
+        data: { confirm: 'Ви впевнені, що хочете видалити цей переказ?' }, 
+        class: 'btn btn-danger', form: { style: 'display: inline;' } %>
+  <% end %>
+</div>
